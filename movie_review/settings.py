@@ -18,6 +18,9 @@ from dotenv import load_dotenv
 BASE_DIR = Path(__file__).resolve().parent.parent
 load_dotenv()
 
+USE_TZ = True
+DATE_INPUT_FORMATS = ['%d-%m-%Y']
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
@@ -40,7 +43,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_extensions',
-    'movie_review',
+    'rest_framework',
+    'movie',
 ]
 
 MIDDLEWARE = [
