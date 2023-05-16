@@ -32,4 +32,4 @@ class Movie(models.Model):
         verbose_name_plural = 'Movies'
 
     def __str__(self):
-        return self.title + self.genres
+        return self.title
