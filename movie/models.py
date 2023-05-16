@@ -1,6 +1,6 @@
 from django.db import models
 from django.utils import timezone
-from django.conf import settings
+from movie.manager import MovieManager
 
 # Create your models here.
 
@@ -8,7 +8,7 @@ from django.conf import settings
 class Movie(models.Model):
     id = models.BigAutoField(primary_key=True, editable=False)
     title = models.CharField(max_length=250, blank=False)
-    rating = models.IntegerField(blank=False)
+    rating = models.DecimalField(decimal_places=1, max_digits=2, blank=False)
     director = models.CharField(max_length=250, blank=False)
     writer = models.CharField(max_length=250, blank=False)
     stars = models.CharField(max_length=250, blank=False)
@@ -24,6 +24,8 @@ class Movie(models.Model):
     runtime = models.DurationField(blank=False)
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(default=timezone.now)
+
+    objects = MovieManager()
 
     class Meta:
         verbose_name = 'Movie'
