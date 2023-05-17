@@ -1,16 +1,18 @@
 from django.shortcuts import render
 from rest_framework.views import APIView
-from .serializers import MovieSerializer
 from .models import Movie
-from applibs import response_helper
-# Create your views here.
+from applibs import response_helper, response_messages
+from .serializers import (
+    AddMovieSerializer,
+    DeleteMovieSerializer
+)
 
 
 class AddMovieView(APIView):
     def __init__(self):
         super(AddMovieView, self).__init__()
         self.request_data = None
-        self.serializer = MovieSerializer
+        self.serializer = AddMovieSerializer
         self.args = None
         self.kwargs = None
 
@@ -39,12 +41,38 @@ class AddMovieView(APIView):
                 data = Movie.objects.add_movie(title, rating, director, writer, stars, storyline, genres, release_date, countries_of_origin, language,
                                                  filming_locations, production_companies, budget, gross_worldwide, runtime)
 
-                if data is not None:
-                    return response_helper.success_response(message="Movie saved successfully!")
-                else:
-                    return response_helper.error_response(message="Movie not saved!")
-            else:
-                return response_helper.error_response(message="Invalid request data!")
+                return response_helper.success_response(message=response_messages.MOVIE_SAVE_SUCCESS, data=str(data))
 
-        except:
-            pass
+            else:
+                return response_helper.error_response(message=response_messages.INVALID_REQUEST_DATA)
+
+        except Exception as e:
+            return response_helper.error_response(message=response_messages.MOVIE_SAVE_FAILED, details=str(e))
+
+
+class DeleteMovieView(APIView):
+    def __init__(self):
+        super(DeleteMovieView, self).__init__()
+        self.request_data = None
+        self.serializer = DeleteMovieSerializer
+        self.args = None
+        self.kwargs = None
+
+    def post(self, request, *args, **kwargs):
+        try:
+            self.request_data = request.data
+            self.serializer = self.serializer(data=self.request_data)
+
+            if self.serializer.is_valid():
+                title = self.serializer.validated_data.get('title')
+
+                data = Movie.objects.delete_movie(title)
+
+                return response_helper.success_response(message=response_messages.MOVIE_DELETE_SUCCESS, data=data)
+            else:
+
+                return response_helper.error_response(message=response_messages.INVALID_REQUEST_DATA)
+
+        except Exception as e:
+            return response_helper.error_response(message=response_messages.MOVIE_DELETE_FAILED, details=str(e))
+

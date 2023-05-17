@@ -2,7 +2,7 @@ from rest_framework import serializers
 from django.conf import settings
 
 
-class MovieSerializer(serializers.Serializer):
+class AddMovieSerializer(serializers.Serializer):
     def create(self, validated_data):
         pass
 
@@ -24,5 +24,15 @@ class MovieSerializer(serializers.Serializer):
     budget = serializers.IntegerField(min_value=1, required=True)
     gross_worldwide = serializers.IntegerField(min_value=1, required=True)
     runtime = serializers.DurationField(required=True)
+
+
+class DeleteMovieSerializer(serializers.Serializer):
+    def create(self, validated_data):
+        pass
+
+    def update(self, instance, validated_data):
+        pass
+
+    title = serializers.CharField(min_length=1, max_length=250, required=True)
 
 
