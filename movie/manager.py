@@ -26,8 +26,12 @@ class MovieManager(models.Manager):
         return data
 
     def delete_movie(self, title):
-
         data = self.get(title=title).delete()
+
+        return data
+
+    def get_movie_list(self):
+        data = self.values_list('title', flat=True)
 
         return data
 

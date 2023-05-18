@@ -36,3 +36,13 @@ class DeleteMovieSerializer(serializers.Serializer):
     title = serializers.CharField(min_length=1, max_length=250, required=True)
 
 
+class GetMovieListSerializer(serializers.Serializer):
+    def create(self, validated_data):
+        pass
+
+    def update(self, instance, validated_data):
+        pass
+
+
+
+
