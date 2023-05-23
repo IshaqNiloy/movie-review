@@ -1,0 +1,6 @@
+# To build an image
+docker build --tag movie_review .
+# To run a container
+docker run --publish 8000:8000 movie_review
+# To get inside the container's shell,
+docker exec -it <container-name> /bin/bash
