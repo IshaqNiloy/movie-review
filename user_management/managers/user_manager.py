@@ -1,24 +1,14 @@
-from django.db import models
+from django.contrib.auth.models import BaseUserManager
 
 
-class UserManager(models.Manager):
-    
-    def create_user(self, first_name, last_name, username, email):
+class UserManager(BaseUserManager):
+    def create_superuser(self, first_name, last_name, username, password, email):
         user = self.create_user(
             first_name=first_name,
             last_name=last_name,
             username=username,
-            email=self.normalize_email(email)
-        )
-
-        return user
-
-    def create_superuser(self, first_name, last_name, username, email):
-        user = self.create_user(
-            first_name=first_name,
-            last_name=last_name,
-            username=username,
-            email=self.normalize_email(email)
+            password=password,
+            email=self.normalize_email(email),
         )
 
         user.is_superuser = True
@@ -26,5 +16,21 @@ class UserManager(models.Manager):
         user.is_admin = True
         user.is_password_reset = True
 
+        user.save(using=self._db)
+
         return user
+
+    def create_user(self, first_name, last_name, username, password, email):
+        user = self.create(
+            first_name=first_name,
+            last_name=last_name,
+            username=username,
+            email=email
+        )
+
+        user.set_password(password)
+        user.save(using=self._db)
+
+        return user
+
     

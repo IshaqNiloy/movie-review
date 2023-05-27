@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'django_extensions',
     'rest_framework',
     'movie',
+    'user_management'
 ]
 
 MIDDLEWARE = [
@@ -111,6 +112,8 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# default user model
+AUTH_USER_MODEL = "user_management.User"
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
