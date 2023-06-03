@@ -14,3 +14,7 @@ USER_CREATE_SUCCESS = 'user created successfully'
 USER_CREATE_FAILED = 'user create failed'
 USER_ALREADY_EXIST = 'user already exist'
 DUPLICATE_EMAIL = 'duplicate email'
+
+# file
+FILE_UPLOAD_SUCCESS = 'file uploaded successfully'
+FILE_UPLOAD_FAILED = 'file upload failed'

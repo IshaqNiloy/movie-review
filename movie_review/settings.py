@@ -45,7 +45,8 @@ INSTALLED_APPS = [
     'django_extensions',
     'rest_framework',
     'movie',
-    'user_management'
+    'user_management',
+    'files'
 ]
 
 MIDDLEWARE = [
