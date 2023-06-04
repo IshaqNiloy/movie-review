@@ -1,13 +1,13 @@
 # movie-review
 
-# Create virtual environment and activate venv in project
+1. Create virtual environment and activate venv in project
 
 ```
 virtualenv venv
 source venv/bin/activate
 ```
 
-# Install project dependencies and configure .env file
+2. Install project dependencies and configure .env file
 
 - Install libraries using requirements.txt
 
