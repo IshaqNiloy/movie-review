@@ -1,6 +1,6 @@
 # movie-review
 
-1. Create virtual environment and activate venv in project
+### Create virtual environment and activate venv in project
 
 ```
 virtualenv venv
