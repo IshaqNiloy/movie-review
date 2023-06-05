@@ -14,3 +14,6 @@ install-requirements:
 create-super-user:
 	python3 manage.py runscript create_super_user
 
+get-super-user:
+	python3 manage.py runscript get_super_user
+

@@ -18,3 +18,5 @@ DUPLICATE_EMAIL = 'duplicate email'
 # file
 FILE_UPLOAD_SUCCESS = 'file uploaded successfully'
 FILE_UPLOAD_FAILED = 'file upload failed'
+ONLY_ACCEPT_CSV = 'we only accept csv file, sorry for inconvenience'
+DUPLICATE_FILE_NAME = 'file name already exist'
