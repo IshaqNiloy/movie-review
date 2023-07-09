@@ -31,10 +31,11 @@ class FileUploadView(APIView):
                     if validated_file.name[-3:] != 'csv':
                         return response_helper.error_response(message=response_messages.ONLY_ACCEPT_CSV)
 
-                    db_file_path = self.model.objects.filter(file=os.getenv('MOVIE_MEDIA_URL') + validated_file.name).first()
+                    db_file_path = self.model.objects.values_list('file', flat=True)
                     ic(db_file_path)
+
                     # Checking for duplicate file name
-                    if db_file_path == os.getenv('MOVIE_MEDIA_URL') + validated_file:
+                    if (os.getenv('MOVIE_MEDIA_URL') + validated_file.name) in db_file_path:
                         return response_helper.error_response(message=response_messages.DUPLICATE_FILE_NAME)
 
                     file = self.model.objects.upload_file(file=validated_file)
