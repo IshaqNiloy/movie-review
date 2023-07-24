@@ -18,7 +18,6 @@ class FileUploadViewSerializer(serializers.Serializer):
     file = serializers.FileField(required=True)
 
     def validate_file_field(self, value):
-        print("Value: ", value)
         if not value:
             raise serializers.ValidationError("File field is required.")
 

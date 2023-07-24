@@ -7,3 +7,5 @@ urlpatterns = [
     # path('update/movie/', ),
     path('delete/movie/', DeleteMovieView.as_view(), name='delete_movie'),
 ]
+
+

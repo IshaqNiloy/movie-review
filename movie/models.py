@@ -6,7 +6,6 @@ from movie.manager import MovieManager
 
 
 class Movie(models.Model):
-    id = models.BigAutoField(primary_key=True, editable=False)
     title = models.CharField(max_length=250, blank=False)
     rating = models.DecimalField(decimal_places=1, max_digits=2, blank=False)
     director = models.CharField(max_length=250, blank=False)
@@ -21,7 +20,7 @@ class Movie(models.Model):
     production_companies = models.CharField(max_length=250, blank=False)
     budget = models.IntegerField(blank=False)
     gross_worldwide = models.IntegerField(blank=False)
-    runtime = models.DurationField(blank=False)
+    runtime = models.IntegerField(blank=False)
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(default=timezone.now)
 

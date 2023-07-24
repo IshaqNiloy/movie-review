@@ -5,6 +5,7 @@ from django.utils import timezone
 from .choices import FileStatus
 from .manager import FilesManager
 
+
 class Files(models.Model):
     id = models.BigAutoField(primary_key=True, editable=False)
     file = models.FileField(blank=False, null=False, upload_to=os.getenv('MOVIE_MEDIA_URL'))

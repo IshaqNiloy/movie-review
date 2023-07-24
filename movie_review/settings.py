@@ -25,29 +25,38 @@ DATE_INPUT_FORMATS = ['%d-%m-%Y']
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-^1dbwj3e#@mqobnc)ag1dnv(pt5w@woli8w)7l$x$6xkh=t+2y'
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DEBUG')
 
 ALLOWED_HOSTS = str(os.getenv('ALLOWED_HOST')).split(',')
 
 
 # Application definition
 
-INSTALLED_APPS = [
+PREINSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+]
+
+THIRD_PARTY_APPS = [
     'django_extensions',
     'rest_framework',
+]
+
+DJANGO_APPS = [
     'movie',
     'user_management',
-    'files'
+    'files',
 ]
+
+INSTALLED_APPS = PREINSTALLED_APPS + DJANGO_APPS + THIRD_PARTY_APPS
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -143,5 +152,60 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 DA_ENVIRONMENT = os.getenv('DA_ENVIRONMENT', 'UNDEFINED')
 
 # Media url
-MEDIA_URL = '/media/'
+MEDIA_URL = os.getenv('MEDIA_URL')
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+
+# logging
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'filters': {},
+
+    'formatters': {
+        'console': {
+            'format': '%(levelname)s | %(asctime)s | %(filename)s |'
+                      ' %(module)s:%(funcName)s:%(lineno)d |'
+                      ' %(message)s',
+            'datefmt': "%Y-%m-%d %H:%M:%S",
+        },
+    },
+
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'console',
+        },
+    },
+
+    'loggers': {
+        '': {
+            'level': os.getenv("LOG_LEVEL"),
+            'handlers': ['console'],
+            'propagate': False
+        },
+
+        'general': {
+            'handlers': ['console'],
+            'level': os.getenv("LOG_LEVEL"),
+            'propagate': False,
+        },
+
+        'django': {
+            'handlers': ['console'],
+            'level': os.getenv("DJANGO_LOG_LEVEL"),
+            'propagate': False,
+        },
+
+        'django.db.backends': {
+            'handlers': ['console'],
+            'level': os.getenv("DJANGO_LOG_LEVEL"),
+            'propagate': False,
+        },
+
+        'django.template': {
+            'handlers': ['console'],
+            'level': os.getenv("DJANGO_LOG_LEVEL"),
+            'propagate': False,
+        },
+    },
+}
