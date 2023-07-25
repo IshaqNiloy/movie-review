@@ -57,7 +57,7 @@ for _ in range(100):
     ]
     data.append(row)
 
-filename = "../movie_data.csv"
+filename = "../movie_data_1.csv"
 
 with open(filename, mode="w", newline="") as file:
     writer = csv.writer(file)

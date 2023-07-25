@@ -6,7 +6,7 @@ from movie.manager import MovieManager
 
 
 class Movie(models.Model):
-    title = models.CharField(max_length=250, blank=False)
+    title = models.CharField(max_length=250, blank=False, unique=True)
     rating = models.DecimalField(decimal_places=1, max_digits=2, blank=False)
     director = models.CharField(max_length=250, blank=False)
     writer = models.CharField(max_length=250, blank=False)
