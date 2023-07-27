@@ -51,6 +51,30 @@ class AddMovieView(APIView):
             return response_helper.error_response(message=response_messages.MOVIE_SAVE_FAILED, details=str(e))
 
 
+class GetMovieListView(APIView):
+    def __init__(self):
+        super(GetMovieListView, self).__init__()
+        self.request_data = None
+        self.serializer = GetMovieListSerializer
+        self.args = None
+        self.kwargs = None
+
+    def get(self, request, *args, **kwargs):
+        try:
+            data = Movie.objects.get_movie_list()
+            movie_list = [movie for movie in data]
+
+            return response_helper.success_response(message=response_messages.MOVIE_LIST_FETCH_SUCCESS,
+                                                    data=movie_list)
+
+        except Exception as e:
+            return response_helper.error_response(message=response_messages.MOVIE_LIST_FETCH_FAILED, details=str(e))
+
+class UpdateMovieView(APIView):
+    def __int__(self):
+        super(UpdateMovieView, self).__init__()
+
+    def post(self):
 class DeleteMovieView(APIView):
     def __init__(self):
         super(DeleteMovieView, self).__init__()
@@ -76,25 +100,3 @@ class DeleteMovieView(APIView):
 
         except Exception as e:
             return response_helper.error_response(message=response_messages.MOVIE_DELETE_FAILED, details=str(e))
-
-
-class GetMovieListView(APIView):
-    def __init__(self):
-        super(GetMovieListView, self).__init__()
-        self.request_data = None
-        self.serializer = GetMovieListSerializer
-        self.args = None
-        self.kwargs = None
-
-    def get(self, request, *args, **kwargs):
-        try:
-            data = Movie.objects.get_movie_list()
-            movie_list = [movie for movie in data]
-
-            return response_helper.success_response(message=response_messages.MOVIE_LIST_FETCH_SUCCESS,
-                                                    data=movie_list)
-
-        except Exception as e:
-            return response_helper.error_response(message=response_messages.MOVIE_LIST_FETCH_FAILED, details=str(e))
-
-
