@@ -32,7 +32,7 @@ def run():
                 for record in movie_records:
                     title = record['title']
                     rating = record['rating']
-                    director = record['title']
+                    director = record['director']
                     writer = record['writer']
                     stars = record['stars']
                     storyline = record['storyline']

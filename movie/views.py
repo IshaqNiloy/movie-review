@@ -6,6 +6,7 @@ from .serializers import (
     AddMovieSerializer,
     DeleteMovieSerializer,
     GetMovieListSerializer,
+    UpdateMovieSerializer,
 )
 
 
@@ -70,11 +71,34 @@ class GetMovieListView(APIView):
         except Exception as e:
             return response_helper.error_response(message=response_messages.MOVIE_LIST_FETCH_FAILED, details=str(e))
 
-class UpdateMovieView(APIView):
-    def __int__(self):
-        super(UpdateMovieView, self).__init__()
 
-    def post(self):
+class UpdateMovieView(APIView):
+    def __init__(self):
+        super(UpdateMovieView, self).__init__()
+        self.request_data = None
+        self.serializer = UpdateMovieSerializer
+        self.args = None
+        self.kwargs = None
+
+    def post(self, request, *args, **kwargs):
+        try:
+            self.request_data = request.data
+            self.serializer = self.serializer(data=self.request_data)
+
+            if self.serializer.is_valid():
+                movie = Movie.objects.filter(title=self.request_data['title'])
+
+                for key in self.request_data.keys():
+                    updated_movie = movie.update(key=self.request_data[key])
+                return response_helper.success_response(message=response_messages.MOVIE_UPDATE_SUCCESS,
+                                                        data=updated_movie)
+            else:
+                return response_helper.error_response(message=response_messages.INVALID_REQUEST_DATA)
+
+        except Exception as e:
+            return response_helper.success_response(message=response_messages.MOVIE_UPDATE_FAILED, details=str(e))
+                
+
 class DeleteMovieView(APIView):
     def __init__(self):
         super(DeleteMovieView, self).__init__()
