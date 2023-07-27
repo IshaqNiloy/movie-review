@@ -37,9 +37,14 @@ available_genres = [
     "Superhero"
 ]
 
-for _ in range(100):
+
+def generate_unique_movie_title(word: str):
+    return f'{word}{random.randint(0, 1000)}'
+
+
+for i in range(100):
     row = [
-        fake.word(),  # title
+        generate_unique_movie_title(fake.word()),  # title
         round(random.uniform(0, 10), 1),  # rating
         fake.random_elements(elements=available_names, length=random.randint(1, 5)),  # director
         fake.random_elements(elements=available_names, length=random.randint(1, 5)),  # writer
@@ -51,13 +56,13 @@ for _ in range(100):
         [fake.language_name() for _ in range(random.randint(1, 5))],  # languages
         [fake.city() for _ in range(random.randint(1, 5))],  # filming_locations
         fake.company(),  # production_companies
-        fake.random_int(min=100000, max=10000000),  # budget
-        fake.random_int(min=100000, max=10000000),  # gross_worldwide
+        fake.random_int(min=100000, max=1000000),  # budget
+        fake.random_int(min=100000, max=1000000),  # gross_worldwide
         fake.random_int(min=60, max=180),  # runtime
     ]
     data.append(row)
 
-filename = "../movie_data_1.csv"
+filename = "../movie_data.csv"
 
 with open(filename, mode="w", newline="") as file:
     writer = csv.writer(file)

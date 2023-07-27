@@ -58,12 +58,11 @@ def run():
                 Movie.objects.bulk_create(movie_object_list)
                 file_objects.update(status=FileStatus.SYNCED)
 
-                logger.info('everything synced successfully.')
+            synced = len(Files.objects.filter(status='Synced'))
+            pending = len(Files.objects.filter(status='Pending'))
+            failed = len(Files.objects.filter(status='Failed'))
 
-            elif Files.objects.filter(status=FileStatus.FAILED).first():
-                logger.info('')
-            else:
-                logger.info('nothing to sync.')
+            logger.info(f'Synced: {synced} Pending: {pending} Failed: {failed}')
 
     except ObjectDoesNotExist as e:
         file_objects.update(status=FileStatus.FAILED)
