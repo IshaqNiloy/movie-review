@@ -22,3 +22,8 @@ FILE_UPLOAD_SUCCESS = 'file uploaded successfully'
 FILE_UPLOAD_FAILED = 'file upload failed'
 ONLY_ACCEPT_CSV = 'we only accept csv file, sorry for inconvenience'
 DUPLICATE_FILE_NAME = 'file name already exist'
+
+# user review
+MOVIE_DOES_NOT_EXIST = 'movie does now exist'
+USER_REVIEW_SAVE_SUCCESS = 'user review saved successfully'
+USER_REVIEW_SAVE_FAILED = 'user review save failed'

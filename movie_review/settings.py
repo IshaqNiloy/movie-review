@@ -53,6 +53,7 @@ DJANGO_APPS = [
     'movie',
     'user_management',
     'files',
+    'user_review'
 ]
 
 INSTALLED_APPS = PREINSTALLED_APPS + DJANGO_APPS + THIRD_PARTY_APPS

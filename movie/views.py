@@ -17,10 +17,12 @@ class AddMovieView(APIView):
         self.serializer = AddMovieSerializer
         self.args = None
         self.kwargs = None
+        self.lang = 'en'
 
     def post(self, request, *args, **kwargs):
         try:
             self.request_data = request.data
+            self.lang = request.headers.get('Accept-Language', 'en')
             self.serializer = self.serializer(data=self.request_data)
 
             if self.serializer.is_valid():
@@ -40,16 +42,18 @@ class AddMovieView(APIView):
                 gross_worldwide = self.serializer.validated_data.get('gross_worldwide')
                 runtime = self.serializer.validated_data.get('runtime')
 
-                data = Movie.objects.add_movie(title, rating, director, writer, stars, storyline, genres, release_date, countries_of_origin, language,
-                                                 filming_locations, production_companies, budget, gross_worldwide, runtime)
+                data = Movie.objects.add_movie(title, rating, director, writer, stars, storyline, genres, release_date,
+                                               countries_of_origin, language, filming_locations, production_companies,
+                                               budget, gross_worldwide, runtime)
 
-                return response_helper.success_response(message=response_messages.MOVIE_SAVE_SUCCESS, data=str(data))
+                return response_helper.success_response(message=response_messages.MOVIE_SAVE_SUCCESS, lang=self.lang,
+                                                        data=str(data))
 
             else:
-                return response_helper.error_response(message=response_messages.INVALID_REQUEST_DATA)
+                return response_helper.error_response(message=response_messages.INVALID_REQUEST_DATA, lang=self.lang)
 
         except Exception as e:
-            return response_helper.error_response(message=response_messages.MOVIE_SAVE_FAILED, details=str(e))
+            return response_helper.error_response(message=response_messages.MOVIE_SAVE_FAILED, lang=self.lang, details=str(e))
 
 
 class GetMovieListView(APIView):
@@ -59,17 +63,20 @@ class GetMovieListView(APIView):
         self.serializer = GetMovieListSerializer
         self.args = None
         self.kwargs = None
+        self.lang = 'en'
 
     def get(self, request, *args, **kwargs):
         try:
+            self.lang = request.headers.get('Accept-Language', 'en')
             data = Movie.objects.get_movie_list()
             movie_list = [movie for movie in data]
 
             return response_helper.success_response(message=response_messages.MOVIE_LIST_FETCH_SUCCESS,
-                                                    data=movie_list)
+                                                    lang=self.lang, data=movie_list)
 
         except Exception as e:
-            return response_helper.error_response(message=response_messages.MOVIE_LIST_FETCH_FAILED, details=str(e))
+            return response_helper.error_response(message=response_messages.MOVIE_LIST_FETCH_FAILED,
+                                                  lang=self.lang, details=str(e))
 
 
 class UpdateMovieView(APIView):
@@ -79,10 +86,12 @@ class UpdateMovieView(APIView):
         self.serializer = UpdateMovieSerializer
         self.args = None
         self.kwargs = None
+        self.lang = 'en'
 
     def post(self, request, *args, **kwargs):
         try:
             self.request_data = request.data
+            self.lang = request.headers.get('Accept-Language', 'en')
             self.serializer = self.serializer(data=self.request_data)
 
             if self.serializer.is_valid():
@@ -91,12 +100,13 @@ class UpdateMovieView(APIView):
                 for key in self.request_data.keys():
                     updated_movie = movie.update(key=self.request_data[key])
                 return response_helper.success_response(message=response_messages.MOVIE_UPDATE_SUCCESS,
-                                                        data=updated_movie)
+                                                        lang=self.lang, data=updated_movie)
             else:
                 return response_helper.error_response(message=response_messages.INVALID_REQUEST_DATA)
 
         except Exception as e:
-            return response_helper.success_response(message=response_messages.MOVIE_UPDATE_FAILED, details=str(e))
+            return response_helper.success_response(message=response_messages.MOVIE_UPDATE_FAILED, lang=self.lang,
+                                                    details=str(e))
                 
 
 class DeleteMovieView(APIView):
@@ -106,10 +116,12 @@ class DeleteMovieView(APIView):
         self.serializer = DeleteMovieSerializer
         self.args = None
         self.kwargs = None
+        self.lang = 'en'
 
     def post(self, request, *args, **kwargs):
         try:
             self.request_data = request.data
+            self.lang = request.headers.get('Accept-Language', 'en')
             self.serializer = self.serializer(data=self.request_data)
 
             if self.serializer.is_valid():
@@ -117,10 +129,12 @@ class DeleteMovieView(APIView):
 
                 data = Movie.objects.delete_movie(title)
 
-                return response_helper.success_response(message=response_messages.MOVIE_DELETE_SUCCESS, data=data)
+                return response_helper.success_response(message=response_messages.MOVIE_DELETE_SUCCESS, lang=self.lang,
+                                                        data=data)
             else:
-
-                return response_helper.error_response(message=response_messages.INVALID_REQUEST_DATA)
+                return response_helper.error_response(message=response_messages.INVALID_REQUEST_DATA, lang=self.lang)
 
         except Exception as e:
-            return response_helper.error_response(message=response_messages.MOVIE_DELETE_FAILED, details=str(e))
+            return response_helper.error_response(message=response_messages.MOVIE_DELETE_FAILED, lang=self.lang,
+                                                  details=str(e))
+
