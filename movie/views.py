@@ -102,7 +102,8 @@ class UpdateMovieView(APIView):
                 return response_helper.success_response(message=response_messages.MOVIE_UPDATE_SUCCESS,
                                                         lang=self.lang, data=updated_movie)
             else:
-                return response_helper.error_response(message=response_messages.INVALID_REQUEST_DATA)
+                return response_helper.error_response(message=response_messages.INVALID_REQUEST_DATA,
+                                                      lang=self.lang)
 
         except Exception as e:
             return response_helper.success_response(message=response_messages.MOVIE_UPDATE_FAILED, lang=self.lang,

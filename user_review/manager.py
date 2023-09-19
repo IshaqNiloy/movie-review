@@ -1,6 +1,7 @@
 from django.db import models
 from movie.models import Movie
 import logging
+from rest_framework import status
 
 logger = logging.getLogger(__name__)
 
@@ -23,5 +24,23 @@ class UserReviewManager(models.Manager):
         except Exception as e:
             logger.exception(str(e))
             return None
+
+    def get_user_review(self, movie):
+        try:
+          data = self.get(movie=movie)
+          return data, status.HTTP_200_OK
+
+        except Exception as e:
+            logger.exception(str(e))
+
+    def delete_review(self, movie) -> (tuple, int):
+        try:
+            data = self.filter(movie=movie).delete()
+            return data, status.HTTP_200_OK
+
+        except Exception as e:
+            logger.exception(str(e))
+            return None, status.
+
 
 
