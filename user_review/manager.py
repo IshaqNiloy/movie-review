@@ -10,7 +10,9 @@ logger = logging.getLogger(__name__)
 class UserReviewManager(models.Manager):
     def add_review(self, movie_obj, user_obj, review: str):
         try:
-            data = self.create(movie=movie_obj, user=user_obj, user_review=review)
+            data, status_code = self.create(movie=movie_obj, user=user_obj, user_review=review)
+            print(data)
+            print(status_code)
             return data, status.HTTP_200_OK
 
         except Exception as e:

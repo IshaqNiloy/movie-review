@@ -5,8 +5,8 @@ from .models import UserReview
 
 @admin.register(UserReview)
 class UserReviewAdmin(admin.ModelAdmin):
-    list_display = ['movie', 'user_review']
-    search_fields = []
-    list_filter = []
+    list_display = ['movie', 'user', 'user_review']
+    search_fields = ['movie', 'user']
+    list_filter = ['movie', 'user']
 
 

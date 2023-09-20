@@ -14,6 +14,7 @@ class UserReview(models.Model):
     objects = UserReviewManager()
 
     class Meta:
+        unique_together = ('movie', 'user')
         verbose_name = 'user review'
         verbose_name_plural = 'user reviews'
 
