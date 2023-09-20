@@ -1,13 +1,15 @@
 # general
 INVALID_REQUEST_DATA = 'Invalid request data'
+INTERNAL_SERVER_ERROR = 'An internal server error occurred while processing your request. Please try again later.'
 
 # db
-MOVIE_SAVE_SUCCESS = 'Movie saved successfully'
-MOVIE_SAVE_FAILED = 'Movie save failed'
-MOVIE_DELETE_SUCCESS = 'Movie deleted successfully'
-MOVIE_DELETE_FAILED = 'Movie delete failed'
-MOVIE_UPDATE_SUCCESS = 'Movie updated successfully'
-MOVIE_UPDATE_FAILED = 'Movie update failed'
+MOVIE_SAVE_SUCCESS = 'movie saved successfully'
+MOVIE_SAVE_FAILED = 'movie save failed'
+MOVIE_DELETE_SUCCESS = 'movie deleted successfully'
+MOVIE_DELETE_FAILED = 'movie delete failed'
+MOVIE_UPDATE_SUCCESS = 'movie updated successfully'
+MOVIE_UPDATE_FAILED = 'movie update failed'
+MOVIE_DATA_FETCH_FAILED = 'movie data fetch failed'
 MOVIE_LIST_FETCH_SUCCESS = 'Movie list fetch successfully'
 MOVIE_LIST_FETCH_FAILED = 'Movie list fetch failed'
 

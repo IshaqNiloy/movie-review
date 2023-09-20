@@ -18,6 +18,7 @@ class UserView(APIView):
         self.model = User
         self.args = None
         self.kwargs = None
+        self.lang = 'en'
 
     def post(self, request, *args, **kwargs):
         try:
@@ -35,7 +36,7 @@ class UserView(APIView):
                 duplicate_email = self.model.objects.filter(email=email)
 
                 if len(duplicate_email) != 0:
-                    return response_helper.success_response(message=response_messages.DUPLICATE_EMAIL)
+                    return response_helper.success_response(message=response_messages.DUPLICATE_EMAIL, lang=self.lang)
 
                 user = self.model.objects.create_user(first_name=first_name, last_name=last_name, username=username,
                                                       password=password, email=email)
@@ -55,14 +56,15 @@ class UserView(APIView):
                 }
 
                 return response_helper.success_response(message=response_messages.USER_CREATE_SUCCESS,
-                                                        data=response_data)
+                                                        data=response_data, lang=self.lang)
 
             else:
                 return response_helper.error_response(message=response_messages.INVALID_REQUEST_DATA,
-                                                      details=self.serializer.errors)
+                                                      details=self.serializer.errors, lang=self.lang)
 
         except IntegrityError as e:
-            return response_helper.error_response(message=response_messages.USER_ALREADY_EXIST)
+            return response_helper.error_response(message=response_messages.USER_ALREADY_EXIST, lang=self.lang)
         except Exception as e:
-            return response_helper.error_response(message=response_messages.USER_CREATE_FAILED, details=str(e))
+            return response_helper.error_response(message=response_messages.USER_CREATE_FAILED, details=str(e),
+                                                  lang=self.lang)
 

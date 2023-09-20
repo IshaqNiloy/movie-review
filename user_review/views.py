@@ -3,6 +3,7 @@ import logging
 from applibs import response_helper, response_messages
 from rest_framework.views import APIView
 from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
 from .models import UserReview
 from .serializers import (
     AddUserReviewSerializer,
@@ -18,16 +19,18 @@ class Base(APIView):
         self.lang = 'en'
 
     def get_movie_data(self, title: str):
-        return self.model.objects.get_movie(title)
+        return self.model.objects.get_movie(title=title)
 
 
 class AddUserReview(Base):
+    permission_classes = (IsAuthenticated,)
+
     def __init__(self):
         super(AddUserReview, self).__init__()
         self.serializer = AddUserReviewSerializer
 
-    def add_user_review(self, movie_obj, user_review: str):
-        return self.model.objects.add_review(movie_obj, user_review)
+    def add_user_review(self, movie_obj, user_obj, user_review: str):
+        return self.model.objects.add_review(movie_obj, user_obj, user_review)
 
     def post(self, request):
         try:
@@ -37,21 +40,22 @@ class AddUserReview(Base):
 
             if self.serializer.is_valid():
                 movie_title = self.serializer.validated_data['title']
-                movie_obj = self.get_movie_data(movie_title)
+                movie_obj, res_status = self.get_movie_data(movie_title)
 
-                if not movie_obj:
-                    return response_helper.error_response(message=response_messages.MOVIE_DOES_NOT_EXIST,
+                if res_status != status.HTTP_200_OK:
+                    return response_helper.error_response(message=response_messages.MOVIE_DATA_FETCH_FAILED,
                                                           lang=self.lang)
 
                 # add movie review
-                user_review_obj = self.add_user_review(movie_obj, self.serializer.validated_data['user_review'])
+                user_review_obj, res_status = self.add_user_review(movie_obj=movie_obj, user_obj=self.request.user,
+                                                                   user_review=self.serializer.validated_data['user_review'])
 
-                if user_review_obj:
-                    return response_helper.success_response(message=response_messages.USER_REVIEW_SAVE_SUCCESS,
-                                                            lang=self.lang)
-                else:
+                if res_status != status.HTTP_200_OK:
                     return response_helper.error_response(message=response_messages.USER_REVIEW_SAVE_FAILED,
                                                           lang=self.lang)
+
+                return response_helper.success_response(message=response_messages.USER_REVIEW_SAVE_SUCCESS,
+                                                        lang=self.lang)
 
             else:
                 return response_helper.error_response(message=response_messages.INVALID_REQUEST_DATA, lang=self.lang)
@@ -78,7 +82,7 @@ class DeleteUserReview(Base):
         return self.model.objects.delete_review(movie=movie)
 
     def get_user_review(self, movie) -> ():
-        return self.model.objects.get_user_review(movie=movie)
+        return self.model.objects.get_review(movie=movie)
 
     def post(self, request):
         try:
@@ -87,8 +91,15 @@ class DeleteUserReview(Base):
 
             if self.serializer.is_valid():
                 movie_title = self.serializer.validated_data.get('title')
-                movie_obj = self.get_movie_data(movie_title)
-                user_review = self.get_user_review(movie=movie_obj)
+
+                movie_obj, res_status = self.get_movie_data(title=movie_title)
+                print(res_status)
+
+                if res_status != status.HTTP_200_OK:
+                    return response_helper.error_response(message=response_messages.MOVIE_DOES_NOT_EXIST,
+                                                          lang=self.lang)
+
+                user_review, res_status = self.get_user_review(movie=movie_obj)
 
                 if not user_review:
                     return response_helper.error_response(message=response_messages.USER_REVIEW_DOES_NOT_EXIST,
