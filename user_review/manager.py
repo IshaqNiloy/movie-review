@@ -2,6 +2,7 @@ from django.db import models
 import logging
 from rest_framework import status
 from django.core.exceptions import ObjectDoesNotExist
+from django.db import IntegrityError
 from movie.models import Movie
 
 logger = logging.getLogger(__name__)
@@ -10,8 +11,12 @@ logger = logging.getLogger(__name__)
 class UserReviewManager(models.Manager):
     def add_review(self, movie_obj, user_obj, review: str):
         try:
-            data, status_code = self.create(movie=movie_obj, user=user_obj, user_review=review)
+            data = self.create(movie=movie_obj, user=user_obj, user_review=review)
             return data, status.HTTP_200_OK
+
+        except IntegrityError as e:
+            logger.exception(str(e))
+            return None, status.
 
         except Exception as e:
             logger.exception(str(e))
@@ -23,7 +28,8 @@ class UserReviewManager(models.Manager):
             data = Movie.objects.get(title=title)
             return data, status.HTTP_200_OK
 
-        except ObjectDoesNotExist:
+        except ObjectDoesNotExist as e:
+            logger.exception(str(e))
             return None, status.HTTP_404_NOT_FOUND
 
         except Exception as e:
@@ -35,7 +41,8 @@ class UserReviewManager(models.Manager):
             data = self.get(movie=movie)
             return data, status.HTTP_200_OK
 
-        except ObjectDoesNotExist:
+        except ObjectDoesNotExist as e:
+            logger.exception(str(e))
             return None, status.HTTP_404_NOT_FOUND
 
         except Exception as e:
@@ -47,7 +54,8 @@ class UserReviewManager(models.Manager):
             data = self.get(movie=movie).delete()
             return data, status.HTTP_200_OK
 
-        except ObjectDoesNotExist:
+        except ObjectDoesNotExist as e:
+            logger.exception(str(e))
             return None, status.HTTP_404_NOT_FOUND
 
         except Exception as e:

@@ -93,7 +93,6 @@ class DeleteUserReview(Base):
                 movie_title = self.serializer.validated_data.get('title')
 
                 movie_obj, res_status = self.get_movie_data(title=movie_title)
-                print(res_status)
 
                 if res_status != status.HTTP_200_OK:
                     return response_helper.error_response(message=response_messages.MOVIE_DOES_NOT_EXIST,
