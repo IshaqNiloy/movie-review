@@ -1,8 +1,6 @@
 import csv
 import os
 import random
-import re
-
 from faker import Faker
 
 fake = Faker()
@@ -45,6 +43,14 @@ def generate_unique_movie_title(word: str):
     return f'{word}{random.randint(0, 1000)}'
 
 
+def generate_runtime():
+    hours = random.randint(0, 3)
+    minutes = random.randint(0, 60)
+    seconds = random.randint(0, 60)
+
+    return f'{hours:02d}:{minutes:02d}:{seconds:02d}'
+
+
 for i in range(100):
     row = [
         generate_unique_movie_title(fake.word()),  # title
@@ -61,7 +67,7 @@ for i in range(100):
         fake.company(),  # production_companies
         fake.random_int(min=100000, max=1000000),  # budget
         fake.random_int(min=100000, max=1000000),  # gross_worldwide
-        fake.random_int(min=60, max=180),  # runtime
+        generate_runtime(),  # runtime
     ]
     data.append(row)
 

@@ -167,8 +167,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 DA_ENVIRONMENT = os.getenv('DA_ENVIRONMENT', 'UNDEFINED')
 
 # Media url
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MOVIE_MEDIA_URL = os.getenv('MOVIE_MEDIA_URL')
+
 # logging
 LOGGING = {
     'version': 1,

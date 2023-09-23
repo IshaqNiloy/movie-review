@@ -20,7 +20,7 @@ class Movie(models.Model):
     production_companies = models.CharField(max_length=250, blank=False)
     budget = models.IntegerField(blank=False)
     gross_worldwide = models.IntegerField(blank=False)
-    runtime = models.IntegerField(blank=False)
+    runtime = models.DurationField(blank=False)
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(default=timezone.now)
 
