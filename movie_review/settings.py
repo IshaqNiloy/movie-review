@@ -29,7 +29,7 @@ DATE_INPUT_FORMATS = ['%d-%m-%Y']
 SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv('DEBUG')
+DEBUG = os.getenv('DEBUG', False)
 
 ALLOWED_HOSTS = str(os.getenv('ALLOWED_HOST')).split(',')
 
@@ -167,9 +167,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 DA_ENVIRONMENT = os.getenv('DA_ENVIRONMENT', 'UNDEFINED')
 
 # Media url
-MEDIA_URL = os.getenv('MEDIA_URL')
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
-
+MOVIE_MEDIA_URL = os.getenv('MOVIE_MEDIA_URL')
 # logging
 LOGGING = {
     'version': 1,
@@ -225,6 +224,5 @@ LOGGING = {
     },
 }
 
-CSRF_TRUSTED_ORIGINS = str(os.getenv("CSRF_TRUSTED_ORIGINS")).split(",")
 
 

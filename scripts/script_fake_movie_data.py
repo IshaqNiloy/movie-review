@@ -1,5 +1,8 @@
 import csv
+import os
 import random
+import re
+
 from faker import Faker
 
 fake = Faker()
@@ -62,9 +65,26 @@ for i in range(100):
     ]
     data.append(row)
 
-filename = "../movie_data.csv"
+# Specify the file you want to save
+base_filename = "movie_data_"
 
-with open(filename, mode="w", newline="") as file:
+# Update file name
+filename = base_filename + str(fake.random_int(min=0, max=100)) + '.csv'
+
+# Get the path to the "Downloads" directory for the current user
+downloads_directory = os.path.expanduser("~" + os.sep + "Downloads")
+
+# Construct the full path to the directory where you want to save the file
+save_directory = os.path.join(downloads_directory, "postman_files")
+
+# Ensure the directory exists; create it if it doesn't
+if not os.path.exists(save_directory):
+    os.makedirs(save_directory)
+
+# Construct the full path to the file
+file_path = os.path.join(save_directory, filename)
+
+with open(file_path, mode="w", newline="") as file:
     writer = csv.writer(file)
     writer.writerow(headers)
     writer.writerows(data)
