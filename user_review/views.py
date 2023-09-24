@@ -50,6 +50,10 @@ class AddUserReview(Base):
                 user_review_obj, res_status = self.add_user_review(movie_obj=movie_obj, user_obj=self.request.user,
                                                                    user_review=self.serializer.validated_data['user_review'])
 
+                if res_status == status.HTTP_409_CONFLICT:
+                    return response_helper.error_response(message=response_messages.USER_REVIEW_ALREADY_EXIST,
+                                                          lang=self.lang)
+
                 if res_status != status.HTTP_200_OK:
                     return response_helper.error_response(message=response_messages.USER_REVIEW_SAVE_FAILED,
                                                           lang=self.lang)

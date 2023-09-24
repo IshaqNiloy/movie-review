@@ -16,7 +16,7 @@ class UserReviewManager(models.Manager):
 
         except IntegrityError as e:
             logger.exception(str(e))
-            return None, status.
+            return None, status.HTTP_409_CONFLICT
 
         except Exception as e:
             logger.exception(str(e))
