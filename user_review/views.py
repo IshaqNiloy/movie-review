@@ -7,6 +7,7 @@ from rest_framework.permissions import IsAuthenticated
 from .models import UserReview
 from .serializers import (
     AddUserReviewSerializer,
+    GetUserReviewSerializer,
     DeleteUserReviewSerializer
 )
 
@@ -70,7 +71,29 @@ class AddUserReview(Base):
 
 
 class GetUserReview:
-    pass
+    permission_classes = (IsAuthenticated,)
+
+    def __init__(self):
+        super(GetUserReview, self).__init__()
+        self.request_data = None
+        self.serializer = GetUserReviewSerializer
+        self.lang = None
+
+    def post(self, request):
+        try:
+            self.request_data = request.data
+            self.lang = request.headers.get('Accept-Language', 'en')
+            self.serializer = self.serializer(data=self.request_data)
+
+            if self.serializer.is_valid():
+
+            else:
+                return response_helper.error_response(message=response_messages.INVALID_REQUEST_DATA,
+                                                      lang=self.lang)
+        except Exception as e:
+            return response_helper.error_response(message=response_messages.USER_REVIEW_FETCH_FAILED, details=str(e),
+                                                  lang=self.lang)
+
 
 
 class UpdateUserReview:

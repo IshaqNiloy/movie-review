@@ -12,6 +12,14 @@ class AddUserReviewSerializer(serializers.Serializer):
     user_review = serializers.CharField(required=True)
 
 
+class GetUserReviewSerializer(serializers.Serializer):
+    def create(self, validated_data):
+        pass
+
+    def update(self, instance, validated_data):
+        pass
+
+
 class DeleteUserReviewSerializer(serializers.Serializer):
     def create(self, validated_data):
         pass
