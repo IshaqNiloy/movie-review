@@ -19,6 +19,8 @@ class GetUserReviewSerializer(serializers.Serializer):
     def update(self, instance, validated_data):
         pass
 
+    title = serializers.CharField(max_length=250, required=True)
+
 
 class DeleteUserReviewSerializer(serializers.Serializer):
     def create(self, validated_data):
