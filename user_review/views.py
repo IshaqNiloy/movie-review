@@ -22,6 +22,9 @@ class Base(APIView):
     def get_movie_data(self, title: str):
         return self.model.objects.get_movie(title=title)
 
+    def get_user_review(self, user, movie) -> ():
+        return self.model.objects.get_review(user=user, movie=movie)
+
 
 class AddUserReview(Base):
     permission_classes = (IsAuthenticated,)
@@ -70,7 +73,7 @@ class AddUserReview(Base):
                                                   details=str(e))
 
 
-class GetUserReview:
+class GetUserReview(Base):
     permission_classes = (IsAuthenticated,)
 
     def __init__(self):
@@ -86,6 +89,30 @@ class GetUserReview:
             self.serializer = self.serializer(data=self.request_data)
 
             if self.serializer.is_valid():
+                # movie title
+                movie_title = self.serializer.validated_data['title']
+
+                # get movie
+                movie_obj = self.get_movie_data(title=movie_title)
+
+                if not movie_obj:
+                    return response_helper.error_response(message=response_messages.MOVIE_DATA_FETCH_FAILED,
+                                                          lang=self.lang)
+                # get review
+                movie_review = self.get_user_review(user=request.user, movie=movie_obj)
+
+                if not movie_review:
+                    return response_helper.error_response(message=response_messages.USER_REVIEW_FETCH_FAILED,
+                                                          lang=self.lang)
+
+                # json response
+                response = {
+                    'title': movie_review.movie.title,
+                    'review': movie_review.user_review
+                }
+
+                return response_helper.success_response(message=response_messages.USER_REVIEW_FETCH_SUCCESS,
+                                                        data=response, lang=self.lang)
 
             else:
                 return response_helper.error_response(message=response_messages.INVALID_REQUEST_DATA,
@@ -101,6 +128,8 @@ class UpdateUserReview:
 
 
 class DeleteUserReview(Base):
+    permission_classes = (IsAuthenticated,)
+
     def __init__(self):
         super(DeleteUserReview, self).__init__()
         self.serializer = DeleteUserReviewSerializer
@@ -108,37 +137,34 @@ class DeleteUserReview(Base):
     def delete_user_review(self, movie: str) -> (tuple, int):
         return self.model.objects.delete_review(movie=movie)
 
-    def get_user_review(self, movie) -> ():
-        return self.model.objects.get_review(movie=movie)
-
     def post(self, request):
         try:
             self.request_data = request.data
             self.serializer = self.serializer(data=self.request_data)
 
             if self.serializer.is_valid():
+                # movie title
                 movie_title = self.serializer.validated_data.get('title')
 
-                movie_obj, res_status = self.get_movie_data(title=movie_title)
+                # get movie
+                movie_obj = self.get_movie_data(title=movie_title)
 
-                if res_status != status.HTTP_200_OK:
-                    return response_helper.error_response(message=response_messages.MOVIE_DOES_NOT_EXIST,
+                if not movie_obj:
+                    return response_helper.error_response(message=response_messages.MOVIE_DATA_FETCH_FAILED,
                                                           lang=self.lang)
 
-                user_review, res_status = self.get_user_review(movie=movie_obj)
+                # get user review
+                user_review = self.get_user_review(user=request.user, movie=movie_obj)
 
                 if not user_review:
-                    return response_helper.error_response(message=response_messages.USER_REVIEW_DOES_NOT_EXIST,
-                                                          lang=self.lang)
-
-                _, res_status = self.delete_user_review(movie=movie_obj)
-
-                if res_status == status.HTTP_200_OK:
-                    return response_helper.error_response(message=response_messages.USER_REVIEW_DELETE_SUCCESS,
-                                                          lang=self.lang)
-                else:
                     return response_helper.error_response(message=response_messages.USER_REVIEW_DELETE_FAILED,
                                                           lang=self.lang)
+
+                # delete review
+                self.delete_user_review(movie=movie_obj)
+
+                return response_helper.error_response(message=response_messages.USER_REVIEW_DELETE_SUCCESS,
+                                                      lang=self.lang)
 
             else:
                 return response_helper.error_response(message=response_messages.INVALID_REQUEST_DATA, lang=self.lang)
