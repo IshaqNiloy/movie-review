@@ -33,4 +33,5 @@ USER_REVIEW_DELETE_FAILED = 'user review delete failed'
 USER_REVIEW_DELETE_SUCCESS = 'user review deleted successfully'
 USER_REVIEW_DOES_NOT_EXIST = 'user review does not exist'
 USER_REVIEW_FETCH_FAILED = 'user review fetch failed'
+USER_REVIEW_FETCH_SUCCESS = 'user review fetched successfully'
 
