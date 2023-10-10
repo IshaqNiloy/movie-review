@@ -5,7 +5,7 @@ class MovieManager(models.Manager):
     def add_movie(self, title, rating, director, writer, stars, storyline, genres, release_date, countries_of_origin, language,
                   filming_locations, production_companies, budget, gross_worldwide, runtime):
 
-        data = self.create(
+        return self.create(
             title=title,
             rating=rating,
             director=director,
@@ -23,17 +23,12 @@ class MovieManager(models.Manager):
             runtime=runtime
         )
 
-        return data
-
     def delete_movie(self, title):
-        data = self.get(title=title).delete()
-
-        return data
+        return self.get(title=title).delete()
 
     def get_movie_list(self):
-        data = self.values_list('title', flat=True)
+        return self.values_list('title', flat=True)
 
-        return data
 
 
 
