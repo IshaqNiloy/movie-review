@@ -78,9 +78,7 @@ class GetUserReview(Base):
 
     def __init__(self):
         super(GetUserReview, self).__init__()
-        self.request_data = None
         self.serializer = GetUserReviewSerializer
-        self.lang = None
 
     def post(self, request):
         try:
