@@ -8,7 +8,8 @@ from .models import UserReview
 from .serializers import (
     AddUserReviewSerializer,
     GetUserReviewSerializer,
-    DeleteUserReviewSerializer
+    DeleteUserReviewSerializer,
+    UpdateUserReviewSerializer
 )
 
 
@@ -22,8 +23,8 @@ class Base(APIView):
     def get_movie_data(self, title: str):
         return self.model.objects.get_movie(title=title)
 
-    def get_user_review(self, user, movie) -> ():
-        return self.model.objects.get_review(user=user, movie=movie)
+    def get_user_review(self, user, movie):
+        return self.model.objects.get_review(user=user, movie_obj=movie)
 
 
 class AddUserReview(Base):
@@ -33,8 +34,8 @@ class AddUserReview(Base):
         super(AddUserReview, self).__init__()
         self.serializer = AddUserReviewSerializer
 
-    def add_user_review(self, movie_obj, user_obj, user_review: str):
-        return self.model.objects.add_review(movie_obj, user_obj, user_review)
+    def add_user_review(self, movie, user, user_review: str):
+        return self.model.objects.add_review(movie=movie, user=user, review=user_review)
 
     def post(self, request):
         try:
@@ -44,21 +45,19 @@ class AddUserReview(Base):
 
             if self.serializer.is_valid():
                 movie_title = self.serializer.validated_data['title']
-                movie_obj, res_status = self.get_movie_data(movie_title)
+                user_review = self.serializer.validated_data['user_review']
 
-                if res_status != status.HTTP_200_OK:
+                # get movie
+                movie_obj = self.get_movie_data(movie_title)
+
+                if not movie_obj:
                     return response_helper.error_response(message=response_messages.MOVIE_DATA_FETCH_FAILED,
                                                           lang=self.lang)
 
                 # add movie review
-                user_review_obj, res_status = self.add_user_review(movie_obj=movie_obj, user_obj=self.request.user,
-                                                                   user_review=self.serializer.validated_data['user_review'])
+                user_review_obj = self.add_user_review(movie=movie_obj, user=request.user, user_review=user_review)
 
-                if res_status == status.HTTP_409_CONFLICT:
-                    return response_helper.error_response(message=response_messages.USER_REVIEW_ALREADY_EXIST,
-                                                          lang=self.lang)
-
-                if res_status != status.HTTP_200_OK:
+                if not user_review_obj:
                     return response_helper.error_response(message=response_messages.USER_REVIEW_SAVE_FAILED,
                                                           lang=self.lang)
 
@@ -87,7 +86,6 @@ class GetUserReview(Base):
             self.serializer = self.serializer(data=self.request_data)
 
             if self.serializer.is_valid():
-                # movie title
                 movie_title = self.serializer.validated_data['title']
 
                 # get movie
@@ -120,9 +118,38 @@ class GetUserReview(Base):
                                                   lang=self.lang)
 
 
+class UpdateUserReview(Base):
+    def __init__(self):
+        super(UpdateUserReview, self).__init__()
+        self.serializer = UpdateUserReviewSerializer
 
-class UpdateUserReview:
-    pass
+    @staticmethod
+    def update_review_data(user, movie, review):
+        return UserReview.objects.update_review(user, movie, review)
+
+    def post(self, request):
+        self.lang = request.headers.get('Accept-Language', 'en')
+        self.request_data = request.data
+        self.serializer = self.serializer(data=self.request_data)
+
+        try:
+            if self.serializer.is_valid():
+                movie_title = self.serializer.validated_data.get('title')
+                user_review = self.serializer.validated_data.get('user_review')
+
+                # get movie
+                movie_obj = self.get_movie_data(title=movie_title)
+
+                if not movie_obj:
+                    return response_helper.error_response(message=response_messages.MOVIE_DATA_FETCH_FAILED,
+                                                          lang=self.lang)
+
+                # update review
+                self.update_review_data(user=request.user, movie=movie_obj, review=user_review)
+
+        except Exception as e:
+            return response_helper.error_response(message=response_messages.INVALID_REQUEST_DATA, lang=self.lang,
+                                                  details=str(e))
 
 
 class DeleteUserReview(Base):
@@ -133,7 +160,7 @@ class DeleteUserReview(Base):
         self.serializer = DeleteUserReviewSerializer
 
     def delete_user_review(self, movie: str) -> (tuple, int):
-        return self.model.objects.delete_review(movie=movie)
+        return self.model.objects.delete_review(movie_obj=movie)
 
     def post(self, request):
         try:
